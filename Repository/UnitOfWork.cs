@@ -6,9 +6,23 @@ namespace PublishingHouse.Repository;
 public class UnitOfWork : IUnitOfWork
 {
 	private readonly AppDbContext _db;
+	public IAuthorRepository Author { get; private set; }
+	public ICityRepository City { get; private set; }
+	public ICounrtyRepository Counrty { get; private set; }
+	public IGenderRepository Gender { get; private set; }
+	public IProductRepository Product { get; private set; }
+	public IProductTypeRepository ProductType { get; private set; }
+	public IPublisherRepository Publisher { get; private set; }
 
 	public UnitOfWork(AppDbContext db)
 	{
 		_db = db;
+		Author = new AuthorRepository(_db);
+		City = new CityRepository(_db);
+		Counrty = new CountryRepository(_db);
+		Gender = new GenderRepository(_db);
+		Product = new ProductRepository(_db);
+		ProductType = new ProductTypeRepository(_db);
+		Publisher = new Publisher(_db);
 	}
 }
