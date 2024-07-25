@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PublishingHouse.Models;
 
 namespace PublishingHouse.Data;
 
@@ -6,4 +7,13 @@ public class AppDbContext : DbContext
 {
 	public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
 	{ }
+
+	public DbSet<Author> Authors { get; set; }
+	public DbSet<Gender> Genders { get; set; }
+	public DbSet<City> Cities { get; set; }
+	public DbSet<Country> Countries { get; set; }
+	public DbSet<Product> Products { get; set; }
+	public DbSet<ProductType> ProductTypes { get; set; }
+	public DbSet<Publisher> Publishers { get; set; }
+
 }
