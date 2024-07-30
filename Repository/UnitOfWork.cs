@@ -13,6 +13,7 @@ public class UnitOfWork : IUnitOfWork
 	public IProductRepository Product { get; private set; }
 	public IProductTypeRepository ProductType { get; private set; }
 	public IPublisherRepository Publisher { get; private set; }
+	public IProductAuthorRepository ProductAuthor { get; private set; }
 
 	public UnitOfWork(AppDbContext db)
 	{
@@ -24,5 +25,11 @@ public class UnitOfWork : IUnitOfWork
 		Product = new ProductRepository(_db);
 		ProductType = new ProductTypeRepository(_db);
 		Publisher = new Publisher(_db);
+		ProductAuthor = new ProductAuthorRepository(_db);
+	}
+
+	public Task Save()
+	{
+		return _db.SaveChangesAsync();
 	}
 }

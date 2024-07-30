@@ -2,11 +2,10 @@
 using PublishingHouse.Models;
 using PublishingHouse.Repository.IRepository;
 
-namespace PublishingHouse.Repository
+namespace PublishingHouse.Repository;
+
+public class AuthorRepository : Repository<Author>, IAuthorRepository
 {
-	public class AuthorRepository : Repository<Author>, IAuthorRepository
-	{
-		public AuthorRepository(AppDbContext db) : base(db)
-		{ }
-	}
+	public AuthorRepository(AppDbContext db) : base(db)
+	{ }
 }

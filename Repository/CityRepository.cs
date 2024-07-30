@@ -2,11 +2,10 @@
 using PublishingHouse.Models;
 using PublishingHouse.Repository.IRepository;
 
-namespace PublishingHouse.Repository
+namespace PublishingHouse.Repository;
+
+public class CityRepository : Repository<City>, ICityRepository
 {
-	public class CityRepository : Repository<City>, ICityRepository
-	{
-		public CityRepository(AppDbContext db) : base(db)
-		{ }
-	}
+	public CityRepository(AppDbContext db) : base(db)
+	{ }
 }

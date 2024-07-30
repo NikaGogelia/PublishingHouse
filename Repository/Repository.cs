@@ -8,76 +8,94 @@ namespace PublishingHouse.Repository;
 public class Repository<T> : IRepository<T> where T : class
 {
 	private readonly AppDbContext _db;
-	private DbSet<T> dbSet;
+	private readonly DbSet<T> _dbSet;
 
 	public Repository(AppDbContext db)
 	{
-		_db = db;
-		dbSet = db.Set<T>();
+		_db = db ?? throw new ArgumentNullException(nameof(db));
+		_dbSet = _db.Set<T>();
 	}
 
-	public async Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null)
+	public async Task<IEnumerable<T>> GetAllAsync()
 	{
-		IQueryable<T> query = dbSet;
-
-		if (includeProperties != null)
+		try
 		{
-			foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+			return await _dbSet.AsNoTracking().ToListAsync();
+		}
+		catch (Exception ex)
+		{
+			throw new Exception("An error occurred while retrieving all records.", ex);
+		}
+	}
+
+	public async Task<T> GetByIdAsync(Expression<Func<T, bool>>? filter = null)
+	{
+		try
+		{
+			IQueryable<T> query = _dbSet.AsNoTracking();
+
+			if (filter != null)
 			{
-				query = query.Include(property);
+				query = query.Where(filter);
 			}
-		}
 
-		return await query.ToListAsync();
+			return await query.FirstOrDefaultAsync();
+		}
+		catch (Exception ex)
+		{
+			throw new Exception("An error occurred while retrieving the record.", ex);
+		}
 	}
 
-	public async Task<T> GetByIdAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+	public async Task AddAsync(T entity)
 	{
-		IQueryable<T> query = dbSet;
-
-		if (filter != null)
+		try
 		{
-			query = query.Where(filter);
-		}
-
-		if (includeProperties != null)
-		{
-			foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+			if (entity == null)
 			{
-				query = query.Include(property);
+				throw new ArgumentNullException(nameof(entity));
 			}
+
+			await _dbSet.AddAsync(entity);
 		}
-
-		return await query.FirstOrDefaultAsync();
-	}
-
-	public async Task<T> AddAsync(T entity)
-	{
-		await dbSet.AddAsync(entity);
-		await _db.SaveChangesAsync();
-
-		return entity;
-	}
-
-	public async Task<bool> DeleteAsync(int id)
-	{
-		var entiry = await dbSet.FindAsync(id);
-
-		if (entiry != null)
+		catch (Exception ex)
 		{
-			dbSet.Remove(entiry);
-			await _db.SaveChangesAsync();
-			return true;
+			throw new Exception("An error occurred while adding the record.", ex);
 		}
-
-		return false;
 	}
 
-	public async Task<T> UpdateAsync(int id, T entity)
+	public async Task DeleteAsync(int id)
 	{
-		dbSet.Update(entity);
-		await _db.SaveChangesAsync();
+		try
+		{
+			var entity = await _dbSet.FindAsync(id);
+			if (entity == null)
+			{
+				throw new ArgumentNullException(nameof(entity));
+			}
 
-		return entity;
+			_dbSet.Remove(entity);
+		}
+		catch (Exception ex)
+		{
+			throw new Exception("An error occurred while deleting the record.", ex);
+		}
+	}
+
+	public async Task UpdateAsync(T entity)
+	{
+		try
+		{
+			if (entity == null)
+			{
+				throw new ArgumentNullException(nameof(entity));
+			}
+
+			_dbSet.Update(entity);
+		}
+		catch (Exception ex)
+		{
+			throw new Exception("An error occurred while updating the record.", ex);
+		}
 	}
 }

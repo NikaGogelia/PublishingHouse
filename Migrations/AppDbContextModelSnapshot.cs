@@ -135,7 +135,12 @@ namespace PublishingHouse.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Annotation")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -144,27 +149,54 @@ namespace PublishingHouse.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int?>("NumberOfPages")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductTypeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("PublisherId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                    b.HasKey("Id");
 
-                    b.Property<int>("TypeId")
+                    b.HasIndex("ProductTypeId");
+
+                    b.HasIndex("PublisherId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("PublishingHouse.Models.ProductAuthor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PublisherId");
+                    b.HasIndex("AuthorId");
 
-                    b.HasIndex("TypeId");
+                    b.HasIndex("ProductId", "AuthorId")
+                        .IsUnique();
 
-                    b.ToTable("Products");
+                    b.ToTable("ProductAuthors");
                 });
 
             modelBuilder.Entity("PublishingHouse.Models.ProductType", b =>
@@ -230,21 +262,50 @@ namespace PublishingHouse.Migrations
 
             modelBuilder.Entity("PublishingHouse.Models.Product", b =>
                 {
+                    b.HasOne("PublishingHouse.Models.ProductType", "ProductType")
+                        .WithMany()
+                        .HasForeignKey("ProductTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PublishingHouse.Models.Publisher", "Publisher")
                         .WithMany()
                         .HasForeignKey("PublisherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PublishingHouse.Models.ProductType", "ProductType")
-                        .WithMany()
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("ProductType");
 
                     b.Navigation("Publisher");
+                });
+
+            modelBuilder.Entity("PublishingHouse.Models.ProductAuthor", b =>
+                {
+                    b.HasOne("PublishingHouse.Models.Author", "Author")
+                        .WithMany("ProductAuthors")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PublishingHouse.Models.Product", "Product")
+                        .WithMany("ProductAuthors")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("PublishingHouse.Models.Author", b =>
+                {
+                    b.Navigation("ProductAuthors");
+                });
+
+            modelBuilder.Entity("PublishingHouse.Models.Product", b =>
+                {
+                    b.Navigation("ProductAuthors");
                 });
 #pragma warning restore 612, 618
         }

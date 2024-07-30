@@ -39,6 +39,7 @@ public class Author
 	public int CityId { get; set; }
 	public City City { get; set; }
 
+	[Phone]
 	[MinLength(4)]
 	[MaxLength(50)]
 	public string PhoneNumber { get; set; }
@@ -46,6 +47,8 @@ public class Author
 	[Required]
 	[EmailAddress]
 	public string Email { get; set; }
+
+	public ICollection<ProductAuthor> ProductAuthors { get; set; }
 
 	public static ValidationResult ValidateAge(DateTime dateOfBirth, ValidationContext context)
 	{

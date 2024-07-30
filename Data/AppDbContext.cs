@@ -15,5 +15,24 @@ public class AppDbContext : DbContext
 	public DbSet<Product> Products { get; set; }
 	public DbSet<ProductType> ProductTypes { get; set; }
 	public DbSet<Publisher> Publishers { get; set; }
+	public DbSet<ProductAuthor> ProductAuthors { get; set; }
 
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		base.OnModelCreating(modelBuilder);
+
+		modelBuilder.Entity<ProductAuthor>()
+			.HasOne(pa => pa.Product)
+			.WithMany(p => p.ProductAuthors)
+			.HasForeignKey(pa => pa.ProductId);
+
+		modelBuilder.Entity<ProductAuthor>()
+			.HasOne(pa => pa.Author)
+			.WithMany(a => a.ProductAuthors)
+			.HasForeignKey(pa => pa.AuthorId);
+
+		modelBuilder.Entity<ProductAuthor>()
+			.HasIndex(pa => new { pa.ProductId, pa.AuthorId })
+			.IsUnique();
+	}
 }
