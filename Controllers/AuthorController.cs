@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PublishingHouse.Enums;
+using PublishingHouse.Models;
 using PublishingHouse.Models.Dtos.Author;
 using PublishingHouse.Models.ResponseModel;
 using PublishingHouse.Services.IServices;
@@ -20,7 +21,7 @@ public class AuthorController : ControllerBase
 	}
 
 	[HttpGet]
-	public async Task<ActionResult<Response>> Get()
+	public async Task<ActionResult<Response>> Get([FromQuery] AuthorQueryParameters query)
 	{
 		if (!ModelState.IsValid)
 		{
@@ -28,7 +29,7 @@ public class AuthorController : ControllerBase
 		}
 		else
 		{
-			var authors = await _authorService.GetAllAuthors();
+			var authors = await _authorService.GetAllAuthors(query);
 
 			_response.Status = Status.Success;
 

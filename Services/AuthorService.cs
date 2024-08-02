@@ -16,9 +16,9 @@ public class AuthorService : IAuthorService
 		_mapper = mapper;
 	}
 
-	public async Task<IEnumerable<AuthorDto>> GetAllAuthors()
+	public async Task<IEnumerable<AuthorDto>> GetAllAuthors(AuthorQueryParameters query)
 	{
-		var authors = await _unitOfWork.Author.GetAllAsync();
+		var authors = await _unitOfWork.Author.GetAllAsync(queryParameters: query);
 
 		var result = _mapper.Map<IEnumerable<AuthorDto>>(authors);
 

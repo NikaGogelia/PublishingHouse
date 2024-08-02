@@ -1,10 +1,11 @@
-﻿using PublishingHouse.Models.Dtos.Author;
+﻿using PublishingHouse.Models;
+using PublishingHouse.Models.Dtos.Author;
 
 namespace PublishingHouse.Services.IServices;
 
 public interface IAuthorService
 {
-	Task<IEnumerable<AuthorDto>> GetAllAuthors();
+	Task<IEnumerable<AuthorDto>> GetAllAuthors(AuthorQueryParameters query);
 	Task<AuthorByIdDto> GetAuthor(int id);
 	Task<AuthorDto> CreateAuthor(CreateAuthorDto entity);
 	Task<AuthorDto> EditAuthor(int id, UpdateAuthorDto entity);
