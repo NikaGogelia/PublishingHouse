@@ -4,7 +4,7 @@ using PublishingHouse.Repository.IRepository;
 
 namespace PublishingHouse.Repository;
 
-public class CountryRepository : Repository<Country>, ICounrtyRepository
+public class CountryRepository : Repository<Country>, ICountryRepository
 {
 	public CountryRepository(AppDbContext db) : base(db)
 	{ }

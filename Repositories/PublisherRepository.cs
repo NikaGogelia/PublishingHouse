@@ -4,8 +4,8 @@ using PublishingHouse.Repository.IRepository;
 
 namespace PublishingHouse.Repository;
 
-public class Publisher : Repository<Publisher>, IPublisherRepository
+public class PublisherRepository : Repository<Publisher>, IPublisherRepository
 {
-	public Publisher(AppDbContext db) : base(db)
+	public PublisherRepository(AppDbContext db) : base(db)
 	{ }
 }

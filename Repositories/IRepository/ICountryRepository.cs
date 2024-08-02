@@ -2,5 +2,5 @@
 
 namespace PublishingHouse.Repository.IRepository;
 
-public interface ICounrtyRepository : IRepository<Country>
+public interface ICountryRepository : IRepository<Country>
 { }

@@ -27,7 +27,7 @@ public class AuthorService : IAuthorService
 
 	public async Task<AuthorByIdDto> GetAuthor(int id)
 	{
-		var author = await _unitOfWork.Author.GetByIdAsync(author => author.Id == id, includeProperties: "Gender,Country,City");
+		var author = await _unitOfWork.Author.GetByIdAsync(author => author.Id == id, includeProperties: "Gender,Country,City,ProductAuthors.Product");
 
 		if (author == null)
 		{

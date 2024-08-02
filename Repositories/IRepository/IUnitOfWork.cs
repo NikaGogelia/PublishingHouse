@@ -4,7 +4,7 @@ public interface IUnitOfWork
 {
 	IAuthorRepository Author { get; }
 	ICityRepository City { get; }
-	ICounrtyRepository Counrty { get; }
+	ICountryRepository Country { get; }
 	IGenderRepository Gender { get; }
 	IProductRepository Product { get; }
 	IProductTypeRepository ProductType { get; }

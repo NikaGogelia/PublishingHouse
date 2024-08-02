@@ -21,6 +21,7 @@ public class AppDbContext : DbContext
 	{
 		base.OnModelCreating(modelBuilder);
 
+		// Many to Many Relationship Between Product and Author
 		modelBuilder.Entity<ProductAuthor>()
 			.HasOne(pa => pa.Product)
 			.WithMany(p => p.ProductAuthors)
@@ -34,5 +35,15 @@ public class AppDbContext : DbContext
 		modelBuilder.Entity<ProductAuthor>()
 			.HasIndex(pa => new { pa.ProductId, pa.AuthorId })
 			.IsUnique();
+
+		// ProductType.Type is Unique
+		modelBuilder.Entity<ProductType>()
+		   .HasIndex(pt => pt.Type)
+		   .IsUnique();
+
+		// Gender.Title is Unique
+		modelBuilder.Entity<Gender>()
+	   .HasIndex(g => g.Title)
+	   .IsUnique();
 	}
 }
