@@ -12,90 +12,79 @@ public class Repository<T> : IRepository<T> where T : class
 
 	public Repository(AppDbContext db)
 	{
-		_db = db ?? throw new ArgumentNullException(nameof(db));
+		_db = db;
 		_dbSet = _db.Set<T>();
 	}
 
-	public async Task<IEnumerable<T>> GetAllAsync()
+	public async Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null)
 	{
-		try
+		IQueryable<T> query = _dbSet;
+
+		if (includeProperties != null)
 		{
-			return await _dbSet.AsNoTracking().ToListAsync();
+			foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+			{
+				query = query.Include(includeProp);
+			}
 		}
-		catch (Exception ex)
-		{
-			throw new Exception("An error occurred while retrieving all records.", ex);
-		}
+
+		return await query.AsNoTracking().ToListAsync();
 	}
 
-	public async Task<T> GetByIdAsync(Expression<Func<T, bool>>? filter = null)
+	public async Task<T> GetByIdAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
 	{
-		try
-		{
-			IQueryable<T> query = _dbSet.AsNoTracking();
+		IQueryable<T> query = _dbSet;
 
-			if (filter != null)
+		if (filter != null)
+		{
+			query = query.Where(filter);
+		}
+
+		if (!string.IsNullOrEmpty(includeProperties))
+		{
+			foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
 			{
-				query = query.Where(filter);
+				query = query.Include(property);
 			}
+		}
 
-			return await query.FirstOrDefaultAsync();
-		}
-		catch (Exception ex)
-		{
-			throw new Exception("An error occurred while retrieving the record.", ex);
-		}
+		return await query.AsNoTracking().FirstOrDefaultAsync();
 	}
 
-	public async Task AddAsync(T entity)
+	public async Task<T> AddAsync(T entity)
 	{
-		try
-		{
-			if (entity == null)
-			{
-				throw new ArgumentNullException(nameof(entity));
-			}
+		await _dbSet.AddAsync(entity);
 
-			await _dbSet.AddAsync(entity);
-		}
-		catch (Exception ex)
-		{
-			throw new Exception("An error occurred while adding the record.", ex);
-		}
+		return entity;
 	}
 
-	public async Task DeleteAsync(int id)
+	public async Task<T> DeleteAsync(int id)
 	{
-		try
-		{
-			var entity = await _dbSet.FindAsync(id);
-			if (entity == null)
-			{
-				throw new ArgumentNullException(nameof(entity));
-			}
+		var entity = await _dbSet.FindAsync(id);
 
-			_dbSet.Remove(entity);
-		}
-		catch (Exception ex)
-		{
-			throw new Exception("An error occurred while deleting the record.", ex);
-		}
+		_dbSet.Remove(entity);
+
+		return entity;
 	}
 
-	public async Task UpdateAsync(T entity)
+	public async Task<T> UpdateAsync(T entity)
 	{
-		try
+		if (entity == null)
 		{
-			if (entity == null)
-			{
-				throw new ArgumentNullException(nameof(entity));
-			}
+			throw new ArgumentNullException(nameof(entity));
+		}
 
+		var entry = _db.Entry(entity);
+		if (entry.State == EntityState.Detached)
+		{
+			_dbSet.Attach(entity);
+			entry.State = EntityState.Modified;
+		}
+		else
+		{
 			_dbSet.Update(entity);
 		}
-		catch (Exception ex)
-		{
-			throw new Exception("An error occurred while updating the record.", ex);
-		}
+
+		return entity;
 	}
 }

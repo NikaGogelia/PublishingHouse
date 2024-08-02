@@ -16,19 +16,12 @@ public class MappingProfiles : Profile
 	public MappingProfiles()
 	{
 		// Mapping for AuthorDtos
-		CreateMap<Author, AuthorDto>()
-			.ForMember(dest => dest.GenderName, opt => opt.MapFrom(src => src.Gender.Title))
-			.ForMember(dest => dest.CountryName, opt => opt.MapFrom(src => src.Country.Title))
-			.ForMember(dest => dest.CityName, opt => opt.MapFrom(src => src.City.Title))
-			.ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.ProductAuthors.Select(pa => pa.Product))).ReverseMap();
+		CreateMap<Author, AuthorDto>().ReverseMap();
 		CreateMap<CreateAuthorDto, Author>();
 		CreateMap<UpdateAuthorDto, Author>();
 
 		// Mapping for ProductDtos
-		CreateMap<Product, ProductDto>()
-			.ForMember(dest => dest.ProductTypeTitle, opt => opt.MapFrom(src => src.ProductType.Type))
-			.ForMember(dest => dest.PublisherTitle, opt => opt.MapFrom(src => src.Publisher.Title))
-			.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.ProductAuthors.Select(pa => pa.Author))).ReverseMap();
+		CreateMap<Product, ProductDto>().ReverseMap();
 		CreateMap<CreateProductDto, Product>();
 		CreateMap<UpdateProductDto, Product>();
 
@@ -58,9 +51,7 @@ public class MappingProfiles : Profile
 		CreateMap<UpdatePublisherDto, Publisher>();
 
 		// Mapping for ProductAuthorDtos
-		CreateMap<ProductAuthor, ProductAuthorDto>()
-			.ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name))
-			.ForMember(dest => dest.AuthorFullName, opt => opt.MapFrom(src => $"{src.Author.FirstName} {src.Author.LastName}")).ReverseMap();
+		CreateMap<ProductAuthor, ProductAuthorDto>().ReverseMap();
 		CreateMap<CreateProductAuthorDto, ProductAuthor>();
 		CreateMap<UpdateProductAuthorDto, ProductAuthor>();
 	}

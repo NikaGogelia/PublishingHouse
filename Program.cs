@@ -3,6 +3,8 @@ using PublishingHouse;
 using PublishingHouse.Data;
 using PublishingHouse.Repository;
 using PublishingHouse.Repository.IRepository;
+using PublishingHouse.Services;
+using PublishingHouse.Services.IServices;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,11 +15,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+
 builder.Services.AddControllers()
 	.AddJsonOptions(options =>
 	{
 		options.JsonSerializerOptions.PropertyNamingPolicy = null;
 		options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+		options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 	});
 
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
