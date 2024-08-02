@@ -105,7 +105,7 @@ public class AuthorController : ControllerBase
 		}
 	}
 
-	[HttpPut("{id}")]
+	[HttpPut("{id:int}")]
 	public async Task<ActionResult<Response>> Update(int id, [FromBody] UpdateAuthorDto updateAuthorDto)
 	{
 		if (!ModelState.IsValid)
@@ -134,7 +134,7 @@ public class AuthorController : ControllerBase
 		}
 	}
 
-	[HttpDelete("{id}")]
+	[HttpDelete("{id:int}")]
 	public async Task<ActionResult<Response>> Delete(int id)
 	{
 		if (!ModelState.IsValid)

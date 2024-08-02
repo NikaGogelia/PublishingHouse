@@ -23,6 +23,7 @@ public class UpdateAuthorDto
 
 	[Required]
 	[DataType(DataType.Date)]
+	[CustomValidation(typeof(UpdateAuthorDto), nameof(ValidateAge))]
 	public DateTime DateOfBirth { get; set; }
 
 	[Required]
@@ -38,4 +39,14 @@ public class UpdateAuthorDto
 	[Required]
 	[EmailAddress]
 	public string Email { get; set; }
+
+	public static ValidationResult ValidateAge(DateTime dateOfBirth, ValidationContext context)
+	{
+		var age = DateTime.Today.Year - dateOfBirth.Year;
+		if (dateOfBirth > DateTime.Today.AddYears(-age)) age--;
+
+		return age >= 18
+			? ValidationResult.Success
+			: new ValidationResult("Author must be at least 18 years old.");
+	}
 }

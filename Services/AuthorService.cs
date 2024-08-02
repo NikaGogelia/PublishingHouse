@@ -16,6 +16,29 @@ public class AuthorService : IAuthorService
 		_mapper = mapper;
 	}
 
+	public async Task<IEnumerable<AuthorDto>> GetAllAuthors()
+	{
+		var authors = await _unitOfWork.Author.GetAllAsync();
+
+		var result = _mapper.Map<IEnumerable<AuthorDto>>(authors);
+
+		return result;
+	}
+
+	public async Task<AuthorByIdDto> GetAuthor(int id)
+	{
+		var author = await _unitOfWork.Author.GetByIdAsync(author => author.Id == id, includeProperties: "Gender,Country,City");
+
+		if (author == null)
+		{
+			throw new KeyNotFoundException($"Author with id {id} not found.");
+		}
+
+		var result = _mapper.Map<AuthorByIdDto>(author);
+
+		return result;
+	}
+
 	public async Task<AuthorDto> CreateAuthor(CreateAuthorDto entity)
 	{
 		var author = _mapper.Map<Author>(entity);
@@ -45,29 +68,6 @@ public class AuthorService : IAuthorService
 		await _unitOfWork.Save();
 
 		var result = _mapper.Map<AuthorDto>(update);
-
-		return result;
-	}
-
-	public async Task<IEnumerable<AuthorDto>> GetAllAuthors()
-	{
-		var authors = await _unitOfWork.Author.GetAllAsync(includeProperties: "Gender,Country,City");
-
-		var result = _mapper.Map<IEnumerable<AuthorDto>>(authors);
-
-		return result;
-	}
-
-	public async Task<AuthorDto> GetAuthor(int id)
-	{
-		var author = await _unitOfWork.Author.GetByIdAsync(author => author.Id == id);
-
-		if (author == null)
-		{
-			throw new KeyNotFoundException($"Author with id {id} not found.");
-		}
-
-		var result = _mapper.Map<AuthorDto>(author);
 
 		return result;
 	}
