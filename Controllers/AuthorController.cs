@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PublishingHouse.Enums;
 using PublishingHouse.Models;
 using PublishingHouse.Models.Dtos.Author;
@@ -9,6 +10,7 @@ namespace PublishingHouse.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = "Operator, Senior Operator")]
 public class AuthorController : ControllerBase
 {
 	private readonly IAuthorService _authorService;

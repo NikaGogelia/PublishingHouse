@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PublishingHouse.Enums;
 using PublishingHouse.Models;
 using PublishingHouse.Models.Dtos.Product;
@@ -9,6 +10,7 @@ namespace PublishingHouse.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = "Manager")]
 public class ProductController : ControllerBase
 {
 	private readonly IProductService _productService;
