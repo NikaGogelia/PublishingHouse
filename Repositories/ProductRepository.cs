@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PublishingHouse.Data;
 using PublishingHouse.Models;
+using PublishingHouse.Models.QueryParameterModel;
 using PublishingHouse.Repository.IRepository;
 
 namespace PublishingHouse.Repository;

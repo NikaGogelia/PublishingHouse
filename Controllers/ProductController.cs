@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PublishingHouse.Enums;
-using PublishingHouse.Models;
 using PublishingHouse.Models.Dtos.Product;
+using PublishingHouse.Models.QueryParameterModel;
 using PublishingHouse.Models.ResponseModel;
 using PublishingHouse.Services.IServices;
 

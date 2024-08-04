@@ -1,4 +1,4 @@
-﻿namespace PublishingHouse.Models;
+﻿namespace PublishingHouse.Models.QueryParameterModel;
 
 public class AuthorQueryParameters
 {

@@ -1,5 +1,5 @@
-﻿using PublishingHouse.Models;
-using PublishingHouse.Models.Dtos.Author;
+﻿using PublishingHouse.Models.Dtos.Author;
+using PublishingHouse.Models.QueryParameterModel;
 
 namespace PublishingHouse.Services.IServices;
 

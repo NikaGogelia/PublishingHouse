@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using PublishingHouse.Models;
 using PublishingHouse.Models.Dtos.Product;
+using PublishingHouse.Models.QueryParameterModel;
 using PublishingHouse.Repository.IRepository;
 using PublishingHouse.Services.IServices;
 
