@@ -12,7 +12,7 @@ using PublishingHouse.Data;
 namespace PublishingHouse.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240730145235_initializeDb")]
+    [Migration("20240804115405_initializeDb")]
     partial class initializeDb
     {
         /// <inheritdoc />
@@ -123,9 +123,12 @@ namespace PublishingHouse.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Title")
+                        .IsUnique();
 
                     b.ToTable("Genders");
                 });
@@ -151,6 +154,9 @@ namespace PublishingHouse.Migrations
                     b.Property<string>("ISBN")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -212,9 +218,12 @@ namespace PublishingHouse.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Type")
+                        .IsUnique();
 
                     b.ToTable("ProductTypes");
                 });

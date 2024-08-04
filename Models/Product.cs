@@ -42,6 +42,9 @@ public class Product : IValidatableObject
 	[MaxLength(1000)]
 	public string Address { get; set; }
 
+	[Required]
+	public bool IsArchived { get; set; }
+
 	public ICollection<ProductAuthor> ProductAuthors { get; set; }
 
 	public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

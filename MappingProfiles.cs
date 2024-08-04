@@ -17,19 +17,26 @@ public class MappingProfiles : Profile
 	{
 		// Mapping for AuthorDtos
 		CreateMap<Author, AuthorDto>().ReverseMap();
-		CreateMap<Author, AuthorByIdDto>().ReverseMap();
+		CreateMap<Author, AuthorByIdDto>()
+			.ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender))
+			.ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country))
+			.ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
+			.ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.ProductAuthors.Select(pa => pa.Product)));
 		CreateMap<CreateAuthorDto, Author>();
 		CreateMap<UpdateAuthorDto, Author>();
 
 		// Mapping for ProductDtos
 		CreateMap<Product, ProductDto>().ReverseMap();
+		CreateMap<Product, ProductByIdDto>()
+			.ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Publisher))
+			.ForMember(dest => dest.ProductType, opt => opt.MapFrom(src => src.ProductType))
+			.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.ProductAuthors.Select(pa => pa.Author)));
 		CreateMap<CreateProductDto, Product>();
 		CreateMap<UpdateProductDto, Product>();
 
 		// Mapping for GenderDtos
 		CreateMap<Gender, GenderDto>().ReverseMap();
 		CreateMap<CreateGenderDto, Gender>();
-		CreateMap<UpdateGenderDto, Gender>();
 
 		// Mapping for CityDtos
 		CreateMap<City, CityDto>().ReverseMap();
@@ -44,7 +51,6 @@ public class MappingProfiles : Profile
 		// Mapping for ProductTypeDtos
 		CreateMap<ProductType, ProductTypeDto>().ReverseMap();
 		CreateMap<CreateProductTypeDto, ProductType>();
-		CreateMap<UpdateProductTypeDto, ProductType>();
 
 		// Mapping for PublisherDtos
 		CreateMap<Publisher, PublisherDto>().ReverseMap();

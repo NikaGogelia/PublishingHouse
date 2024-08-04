@@ -9,5 +9,6 @@ public interface IUnitOfWork
 	IProductRepository Product { get; }
 	IProductTypeRepository ProductType { get; }
 	IPublisherRepository Publisher { get; }
+	IProductAuthorRepository ProductAuthor { get; }
 	public Task Save();
 }

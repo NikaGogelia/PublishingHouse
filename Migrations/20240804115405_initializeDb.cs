@@ -43,7 +43,7 @@ namespace PublishingHouse.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Title = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,7 +56,7 @@ namespace PublishingHouse.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Type = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -128,7 +128,8 @@ namespace PublishingHouse.Migrations
                     ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PublisherId = table.Column<int>(type: "int", nullable: false),
                     NumberOfPages = table.Column<int>(type: "int", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false)
+                    Address = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    IsArchived = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -189,6 +190,12 @@ namespace PublishingHouse.Migrations
                 column: "GenderId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Genders_Title",
+                table: "Genders",
+                column: "Title",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductAuthors_AuthorId",
                 table: "ProductAuthors",
                 column: "AuthorId");
@@ -208,6 +215,12 @@ namespace PublishingHouse.Migrations
                 name: "IX_Products_PublisherId",
                 table: "Products",
                 column: "PublisherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductTypes_Type",
+                table: "ProductTypes",
+                column: "Type",
+                unique: true);
         }
 
         /// <inheritdoc />

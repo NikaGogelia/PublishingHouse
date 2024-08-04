@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using PublishingHouse;
 using PublishingHouse.Data;
 using PublishingHouse.Repository;
 using PublishingHouse.Repository.IRepository;
 using PublishingHouse.Services;
 using PublishingHouse.Services.IServices;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +19,9 @@ builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<IGenderService, GenderService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
+builder.Services.AddScoped<IProductAuthorService, ProductAuthorService>();
 builder.Services.AddScoped<IPublisherService, PublisherService>();
 
 builder.Services.AddControllers()

@@ -33,4 +33,7 @@ public class CreateProductDto
 	[Required]
 	[MaxLength(1000)]
 	public string Address { get; set; }
+
+	[Required]
+	public bool IsArchived { get; set; }
 }
