@@ -18,9 +18,13 @@ public class CityController : ControllerBase
 	public CityController(ICityService cityService)
 	{
 		_cityService = cityService;
-		_response = new Response(Status.Success, "Successfull request");
+		_response = new Response(Status.Success, "Successful request");
 	}
 
+	/// <summary>
+	/// Retrieves a list of all cities.
+	/// </summary>
+	/// <returns>An IActionResult containing the response with the list of cities or an error message.</returns>
 	[HttpGet]
 	public async Task<ActionResult<Response>> Get()
 	{
@@ -38,8 +42,7 @@ public class CityController : ControllerBase
 			{
 				_response.Message = "There are no cities";
 			}
-
-			if (cities.Count() > 0)
+			else
 			{
 				_response.Message = "Cities retrieved successfully";
 			}
@@ -49,6 +52,11 @@ public class CityController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Retrieves a single city by its unique identifier.
+	/// </summary>
+	/// <param name="id">The unique identifier of the city.</param>
+	/// <returns>An IActionResult containing the response with the city details or an error message.</returns>
 	[HttpGet("{id:int}")]
 	public async Task<ActionResult<Response>> Get(int id)
 	{
@@ -78,6 +86,11 @@ public class CityController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Creates a new city with the provided details.
+	/// </summary>
+	/// <param name="createCityDto">The details of the city to create.</param>
+	/// <returns>An IActionResult containing the response with the created city or an error message.</returns>
 	[HttpPost]
 	public async Task<ActionResult<Response>> Post([FromBody] CreateCityDto createCityDto)
 	{
@@ -107,6 +120,12 @@ public class CityController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Updates an existing city with the provided details.
+	/// </summary>
+	/// <param name="id">The unique identifier of the city to update.</param>
+	/// <param name="updateCityDto">The updated details of the city.</param>
+	/// <returns>An IActionResult containing the response with the updated city or an error message.</returns>
 	[HttpPut("{id:int}")]
 	public async Task<ActionResult<Response>> Update(int id, [FromBody] UpdateCityDto updateCityDto)
 	{
@@ -136,6 +155,11 @@ public class CityController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Deletes an existing city by its unique identifier.
+	/// </summary>
+	/// <param name="id">The unique identifier of the city to delete.</param>
+	/// <returns>An IActionResult containing the response with the result of the deletion or an error message.</returns>
 	[HttpDelete("{id:int}")]
 	public async Task<ActionResult<Response>> Delete(int id)
 	{

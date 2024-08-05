@@ -18,9 +18,13 @@ public class ProductTypeController : ControllerBase
 	public ProductTypeController(IProductTypeService productTypeService)
 	{
 		_productTypeService = productTypeService;
-		_response = new Response(Status.Success, "Successfull request");
+		_response = new Response(Status.Success, "Successful request");
 	}
 
+	/// <summary>
+	/// Retrieves a list of all product types.
+	/// </summary>
+	/// <returns>An IActionResult containing the response with the list of product types or an error message.</returns>
 	[HttpGet]
 	public async Task<ActionResult<Response>> Get()
 	{
@@ -38,8 +42,7 @@ public class ProductTypeController : ControllerBase
 			{
 				_response.Message = "There are no product types";
 			}
-
-			if (productTypes.Count() > 0)
+			else
 			{
 				_response.Message = "Product types retrieved successfully";
 			}
@@ -49,6 +52,11 @@ public class ProductTypeController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Retrieves a single product type by its unique identifier.
+	/// </summary>
+	/// <param name="id">The unique identifier of the product type.</param>
+	/// <returns>An IActionResult containing the response with the product type details or an error message.</returns>
 	[HttpGet("{id:int}")]
 	public async Task<ActionResult<Response>> Get(int id)
 	{
@@ -78,6 +86,11 @@ public class ProductTypeController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Creates a new product type with the provided details.
+	/// </summary>
+	/// <param name="createProductTypeDto">The details of the product type to create.</param>
+	/// <returns>An IActionResult containing the response with the created product type or an error message.</returns>
 	[HttpPost]
 	public async Task<ActionResult<Response>> Post([FromBody] CreateProductTypeDto createProductTypeDto)
 	{

@@ -18,9 +18,13 @@ public class GenderController : ControllerBase
 	public GenderController(IGenderService genderService)
 	{
 		_genderService = genderService;
-		_response = new Response(Status.Success, "Successfull request");
+		_response = new Response(Status.Success, "Successful request");
 	}
 
+	/// <summary>
+	/// Retrieves a list of all genders.
+	/// </summary>
+	/// <returns>An IActionResult containing the response with the list of genders or an error message.</returns>
 	[HttpGet]
 	public async Task<ActionResult<Response>> Get()
 	{
@@ -38,8 +42,7 @@ public class GenderController : ControllerBase
 			{
 				_response.Message = "There are no genders";
 			}
-
-			if (genders.Count() > 0)
+			else
 			{
 				_response.Message = "Genders retrieved successfully";
 			}
@@ -49,6 +52,11 @@ public class GenderController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Retrieves a single gender by its unique identifier.
+	/// </summary>
+	/// <param name="id">The unique identifier of the gender.</param>
+	/// <returns>An IActionResult containing the response with the gender details or an error message.</returns>
 	[HttpGet("{id:int}")]
 	public async Task<ActionResult<Response>> Get(int id)
 	{
@@ -78,6 +86,11 @@ public class GenderController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Creates a new gender with the provided details.
+	/// </summary>
+	/// <param name="createGenderDto">The details of the gender to create.</param>
+	/// <returns>An IActionResult containing the response with the created gender or an error message.</returns>
 	[HttpPost]
 	public async Task<ActionResult<Response>> Post([FromBody] CreateGenderDto createGenderDto)
 	{

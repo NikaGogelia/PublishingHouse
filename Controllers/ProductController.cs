@@ -19,9 +19,14 @@ public class ProductController : ControllerBase
 	public ProductController(IProductService productService)
 	{
 		_productService = productService;
-		_response = new Response(Status.Success, "Successfull request");
+		_response = new Response(Status.Success, "Successful request");
 	}
 
+	/// <summary>
+	/// Retrieves a list of products with optional filtering and pagination.
+	/// </summary>
+	/// <param name="query">The query parameters for filtering and pagination.</param>
+	/// <returns>An IActionResult containing the response with the list of products or an error message.</returns>
 	[HttpGet]
 	public async Task<ActionResult<Response>> Get([FromQuery] ProductQueryParameters query)
 	{
@@ -39,8 +44,7 @@ public class ProductController : ControllerBase
 			{
 				_response.Message = "There are no products";
 			}
-
-			if (products.Count() > 0)
+			else
 			{
 				_response.Message = "Products retrieved successfully";
 			}
@@ -50,6 +54,11 @@ public class ProductController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Retrieves a single product by its unique identifier.
+	/// </summary>
+	/// <param name="id">The unique identifier of the product.</param>
+	/// <returns>An IActionResult containing the response with the product details or an error message.</returns>
 	[HttpGet("{id:int}")]
 	public async Task<ActionResult<Response>> Get(int id)
 	{
@@ -79,6 +88,11 @@ public class ProductController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Creates a new product with the provided details.
+	/// </summary>
+	/// <param name="createProductDto">The details of the product to create.</param>
+	/// <returns>An IActionResult containing the response with the created product or an error message.</returns>
 	[HttpPost]
 	public async Task<ActionResult<Response>> Post([FromBody] CreateProductDto createProductDto)
 	{
@@ -108,6 +122,12 @@ public class ProductController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Archives an existing product by its unique identifier.
+	/// </summary>
+	/// <param name="id">The unique identifier of the product to archive.</param>
+	/// <param name="updateProductDto">The updated details of the product for archiving.</param>
+	/// <returns>An IActionResult containing the response with the updated product or an error message.</returns>
 	[HttpPatch("Archive/{id:int}")]
 	public async Task<ActionResult<Response>> Archive(int id, [FromBody] UpdateProductDto updateProductDto)
 	{

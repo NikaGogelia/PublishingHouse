@@ -24,6 +24,11 @@ public class AccountController : ControllerBase
 		_configuration = configuration;
 	}
 
+	/// <summary>
+	/// Registers a new user with the given username and password.
+	/// </summary>
+	/// <param name="model">The registration details including username and password.</param>
+	/// <returns>An IActionResult indicating the success or failure of the registration.</returns>
 	[HttpPost("Register")]
 	public async Task<IActionResult> Register([FromBody] Register model)
 	{
@@ -32,12 +37,16 @@ public class AccountController : ControllerBase
 
 		if (register.Succeeded)
 		{
-
 			return Ok(new { message = "User registered Successfully" });
 		}
 		return BadRequest(register.Errors);
 	}
 
+	/// <summary>
+	/// Logs in a user and generates a JWT token if the login is successful.
+	/// </summary>
+	/// <param name="model">The login details including username and password.</param>
+	/// <returns>An IActionResult with the generated JWT token or an unauthorized response.</returns>
 	[HttpPost("Login")]
 	public async Task<IActionResult> Login([FromBody] Login model)
 	{
@@ -47,10 +56,10 @@ public class AccountController : ControllerBase
 			var userRoles = await _userManager.GetRolesAsync(user);
 
 			var authClaims = new List<Claim>
-		{
-			new Claim(JwtRegisteredClaimNames.Sub, user.UserName!),
-			new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-		};
+			{
+				new Claim(JwtRegisteredClaimNames.Sub, user.UserName!),
+				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+			};
 
 			authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
 
@@ -74,6 +83,11 @@ public class AccountController : ControllerBase
 		return Unauthorized();
 	}
 
+	/// <summary>
+	/// Adds a new role to the system if it does not already exist.
+	/// </summary>
+	/// <param name="model">The role details including the role name.</param>
+	/// <returns>An IActionResult indicating the success or failure of adding the role.</returns>
 	[HttpPost("AddRole")]
 	public async Task<IActionResult> AddRole([FromBody] RoleModel model)
 	{
@@ -95,9 +109,13 @@ public class AccountController : ControllerBase
 		}
 
 		return BadRequest("Role already exists");
-
 	}
 
+	/// <summary>
+	/// Assigns a role to a user.
+	/// </summary>
+	/// <param name="model">The user and role details including username and role name.</param>
+	/// <returns>An IActionResult indicating the success or failure of assigning the role.</returns>
 	[HttpPost("AssignRole")]
 	public async Task<IActionResult> AssignRole([FromBody] UserRole model)
 	{

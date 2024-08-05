@@ -16,15 +16,18 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
+// Configure the application database context with SQL Server
 builder.Services.AddDbContext<AppDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Configure the authentication database context with SQL Server
 builder.Services.AddDbContext<AuthDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Register Unit of Work and Repository services for dependency injection
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+// Register application services for dependency injection
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<ICountryService, CountryService>();
@@ -34,6 +37,7 @@ builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
 builder.Services.AddScoped<IProductAuthorService, ProductAuthorService>();
 builder.Services.AddScoped<IPublisherService, PublisherService>();
 
+// Configure Identity services for user authentication and authorization
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
 	options.Password.RequiredLength = 6;
@@ -45,6 +49,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 	.AddEntityFrameworkStores<AuthDbContext>()
 	.AddDefaultTokenProviders();
 
+// Configure JWT authentication
 builder.Services.AddAuthentication(options =>
 {
 	options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -67,6 +72,7 @@ builder.Services.AddAuthentication(options =>
 		{
 			OnChallenge = context =>
 			{
+				// Customize the response for unauthorized requests
 				context.HandleResponse();
 				context.Response.StatusCode = 401;
 				context.Response.ContentType = "application/json";
@@ -75,6 +81,7 @@ builder.Services.AddAuthentication(options =>
 			},
 			OnForbidden = context =>
 			{
+				// Customize the response for forbidden requests
 				context.Response.StatusCode = 403;
 				context.Response.ContentType = "application/json";
 				var result = JsonSerializer.Serialize(new { message = "You don't have permission to access this resource." });
@@ -83,6 +90,7 @@ builder.Services.AddAuthentication(options =>
 		};
 	});
 
+// Configure authorization policies
 builder.Services.AddAuthorization(options =>
 {
 	options.AddPolicy("SeniorOperatorPolicy", policy => policy.RequireRole("Senior Operator"));
@@ -90,6 +98,7 @@ builder.Services.AddAuthorization(options =>
 	options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Manager"));
 });
 
+// Configure controllers and JSON serialization options
 builder.Services.AddControllers()
 	.AddJsonOptions(options =>
 	{
@@ -98,13 +107,16 @@ builder.Services.AddControllers()
 		options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 	});
 
+// Register AutoMapper for mapping between entities and DTOs
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
+// Configure Swagger for API documentation
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
 	c.SwaggerDoc("v1", new OpenApiInfo { Title = "PublishingHouse", Version = "v1" });
 
+	// Add JWT Bearer authentication to Swagger
 	c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
 	{
 		Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -135,15 +147,20 @@ var app = builder.Build();
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
+	// Enable Swagger in development environment
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
 
+// Redirect HTTP requests to HTTPS
 app.UseHttpsRedirection();
 
+// Enable authentication and authorization middleware
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Map controllers to routes
 app.MapControllers();
 
+// Run the application
 app.Run();

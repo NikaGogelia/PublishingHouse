@@ -19,9 +19,14 @@ public class AuthorController : ControllerBase
 	public AuthorController(IAuthorService authorService)
 	{
 		_authorService = authorService;
-		_response = new Response(Status.Success, "Successfull request");
+		_response = new Response(Status.Success, "Successful request");
 	}
 
+	/// <summary>
+	/// Retrieves a list of authors based on query parameters.
+	/// </summary>
+	/// <param name="query">The query parameters for filtering and pagination.</param>
+	/// <returns>An IActionResult containing the response with the list of authors or an error message.</returns>
 	[HttpGet]
 	public async Task<ActionResult<Response>> Get([FromQuery] AuthorQueryParameters query)
 	{
@@ -39,8 +44,7 @@ public class AuthorController : ControllerBase
 			{
 				_response.Message = "There are no authors";
 			}
-
-			if (authors.Count() > 0)
+			else
 			{
 				_response.Message = "Authors retrieved successfully";
 			}
@@ -50,6 +54,11 @@ public class AuthorController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Retrieves a single author by their unique identifier.
+	/// </summary>
+	/// <param name="id">The unique identifier of the author.</param>
+	/// <returns>An IActionResult containing the response with the author details or an error message.</returns>
 	[HttpGet("{id:int}")]
 	public async Task<ActionResult<Response>> Get(int id)
 	{
@@ -79,6 +88,11 @@ public class AuthorController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Creates a new author with the provided details.
+	/// </summary>
+	/// <param name="createAuthorDto">The details of the author to create.</param>
+	/// <returns>An IActionResult containing the response with the created author or an error message.</returns>
 	[HttpPost]
 	public async Task<ActionResult<Response>> Post([FromBody] CreateAuthorDto createAuthorDto)
 	{
@@ -108,6 +122,12 @@ public class AuthorController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Updates an existing author with the provided details.
+	/// </summary>
+	/// <param name="id">The unique identifier of the author to update.</param>
+	/// <param name="updateAuthorDto">The updated details of the author.</param>
+	/// <returns>An IActionResult containing the response with the updated author or an error message.</returns>
 	[HttpPut("{id:int}")]
 	public async Task<ActionResult<Response>> Update(int id, [FromBody] UpdateAuthorDto updateAuthorDto)
 	{
@@ -137,6 +157,11 @@ public class AuthorController : ControllerBase
 		}
 	}
 
+	/// <summary>
+	/// Deletes an existing author by their unique identifier.
+	/// </summary>
+	/// <param name="id">The unique identifier of the author to delete.</param>
+	/// <returns>An IActionResult containing the response with the result of the deletion or an error message.</returns>
 	[HttpDelete("{id:int}")]
 	public async Task<ActionResult<Response>> Delete(int id)
 	{
